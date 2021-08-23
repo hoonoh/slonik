@@ -31,7 +31,11 @@ export const createUnnestSqlFragment = (token: UnnestSqlTokenType, greatestParam
       '$' +
       String(++placeholderIndex) +
       '::' +
-      escapeIdentifier(stripArrayNotation(columnType)) +
+      (
+        /(.+)\.(.+)/.exec(columnType) ?
+          stripArrayNotation(columnType) :
+          escapeIdentifier(stripArrayNotation(columnType))
+      ) +
       '[]'.repeat(countArrayDimensions(columnType) + 1),
     );
 
